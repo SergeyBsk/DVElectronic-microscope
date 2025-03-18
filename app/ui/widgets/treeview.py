@@ -18,8 +18,6 @@ class TreeView(QTreeView):
         self.file_system_model.setRootPath(QDir.currentPath())
         self.setModel(self.file_system_model)
         self.setRootIndex(self.file_system_model.index(QDir.currentPath()))
-        self.setColumnWidth(0, 100)
-        self.setFixedWidth(150)
         self.setSortingEnabled(True)
 
     def clear_view(self) -> None:

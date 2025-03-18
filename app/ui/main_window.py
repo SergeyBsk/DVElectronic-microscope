@@ -1,12 +1,12 @@
 ''' app/ui/main_window.py '''
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QMainWindow, QWidget, QHBoxLayout, QTextEdit
+from PyQt6.QtWidgets import QMainWindow, QWidget, QHBoxLayout, QTextEdit, QVBoxLayout, QPushButton
 from ..utils.config import AppConfig
+from ..utils.video import VideoCapture
 from .widgets.menubar import MenuBar
-from .widgets.toolbar import ToolBar
+from .widgets.settings import SettingsPanelWidget
 from .widgets.statusbar import StatusBar
-from .widgets.treeview import TreeView
-
+from .widgets.display import VideoDisplayWidget
 
 class MainWindow(QMainWindow):
     """
@@ -30,89 +30,23 @@ class MainWindow(QMainWindow):
         layout = QHBoxLayout(central_widget)
         central_widget.setLayout(layout)
 
-        # Create Widgets
-        self.treeview = self.create_treeview()
-        self.editbox = self.create_edit()
+        self.video_capture = VideoCapture()
 
-        self.create_toolbars()
+        self.videodisplay = self.create_videodisplay()
+        self.settings_panel = self.create_settings_panel()
 
-        # Add Widgets to Window
-        self.setMenuBar(MenuBar(self))
-        self.setStatusBar(StatusBar(self))
 
-        layout.addWidget(self.treeview)
-        layout.addWidget(self.editbox, stretch=1)
-        layout.addWidget(self.editbox)
+        layout.addWidget(self.videodisplay, stretch=3)
+        layout.addWidget(self.settings_panel, stretch=1)
 
-    def create_toolbars(self) -> None:
+    def create_settings_panel(self):
         """
-        Creates and adds the top and right toolbars to the main window.
+        Creates and adds the Settings Panel widget to the main window.
         """
-        # Top Toolbar [PyQt6.QtWidgets.QToolBar]
-        self.topbar = ToolBar(self, orientation=Qt.Orientation.Horizontal,
-                              style=Qt.ToolButtonStyle.ToolButtonTextUnderIcon, icon_size=(24, 24))
+        return SettingsPanelWidget(self.video_capture)
 
-        # Top Toolbar Buttons
-        self.topbar.add_button(
-            "Open", "resources/assets/icons/windows/imageres-10.ico", self.open_file)
-        self.topbar.add_button(
-            "Save", "resources/assets/icons/windows/shell32-259.ico", self.save_file)
-        self.topbar.add_separator()
-        self.topbar.add_button(
-            "Exit", "resources/assets/icons/windows/shell32-220.ico", self.exit_app)
-
-        # Right Toolbar [PyQt6.QtWidgets.QToolBar]
-        self.rightbar = ToolBar(self, orientation=Qt.Orientation.Vertical,
-                                style=Qt.ToolButtonStyle.ToolButtonIconOnly,
-                                icon_size=(24, 24))
-
-        # Right Toolbar Buttons
-        self.rightbar.add_separator()
-        self.rightbar.add_button(
-            "Privacy", "resources/assets/icons/windows/shell32-167.ico", self.privacy_window)
-        self.rightbar.add_button(
-            "Settings", "resources/assets/icons/windows/shell32-315.ico", self.settings_window)
-
-        self.addToolBar(Qt.ToolBarArea.TopToolBarArea, self.topbar)
-        self.addToolBar(Qt.ToolBarArea.RightToolBarArea, self.rightbar)
-
-    def create_treeview(self) -> TreeView:
+    def create_videodisplay(self) -> VideoDisplayWidget:
         """
-        Creates and adds the tree view widget to the main window.
+        Creates and adds the VideoDisplay widget to the main window.
         """
-        return TreeView(self)
-
-    def create_edit(self) -> QTextEdit:
-        """
-        Creates and adds the QTextEdit widget to the main window.
-        """
-        return QTextEdit(self)
-
-    def open_file(self) -> None:
-        """
-        Event handler for the "Open" button. Displays the "Open File" dialog.
-        """
-        print("Open")
-
-    def save_file(self) -> None:
-        """
-        Event handler for the "Save" button. Displays the "Save File" dialog.
-        """
-        print("Save")
-
-    def exit_app(self) -> None:
-        """
-        Event handler for the "Exit" button. Closes the application.
-        """
-        self.close()
-
-    def settings_window(self) -> None:
-        """
-        Event handler for the "Settings" button. Displays the "Settings" window.
-        """
-
-    def privacy_window(self) -> None:
-        """
-        Event handler for the "Privacy" button. Displays the "Privacy" window.
-        """
-        print("privacy_window")
+        return VideoDisplayWidget(self.video_capture)

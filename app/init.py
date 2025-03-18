@@ -16,5 +16,5 @@ def run() -> int:
     AppConfig.initialize()
 
     window: MainWindow = MainWindow()
-    window.show()
+    window.showFullScreen()
     return sys.exit(app.exec())
