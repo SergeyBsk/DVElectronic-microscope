@@ -3,6 +3,7 @@ import cv2
 class VideoCapture:
     def __init__(self, camera_id=0):
         self.cap = cv2.VideoCapture(camera_id)  # Инициализация камеры
+        self.selected_camera = None
         self.contrast = 1.0  # Параметр контраста
         self.sharpness = 1.0  # Параметр резкости
         self.zoom_level = 1.0  # Уровень цифрового зума (1.0 = без зума)
@@ -47,6 +48,13 @@ class VideoCapture:
         start_y = (h - new_h) // 2
         cropped_frame = frame[start_y:start_y + new_h, start_x:start_x + new_w]
         return cv2.resize(cropped_frame, (w, h))  # Масштабируем обратно до исходного размера
+
+    def select_camera(self, camera_id):
+        # Выбор камеры по ID
+        if self.cap is not None:
+            self.cap.release()
+        self.cap = cv2.VideoCapture(camera_id)
+        self.selected_camera = camera_id
 
     def set_contrast(self, value):
         self.contrast = value

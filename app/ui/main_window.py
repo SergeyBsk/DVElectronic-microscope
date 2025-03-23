@@ -1,11 +1,8 @@
 ''' app/ui/main_window.py '''
-from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QMainWindow, QWidget, QHBoxLayout, QTextEdit, QVBoxLayout, QPushButton
+from PyQt6.QtWidgets import QMainWindow, QWidget, QHBoxLayout
 from ..utils.config import AppConfig
 from ..utils.video import VideoCapture
-from .widgets.menubar import MenuBar
 from .widgets.settings import SettingsPanelWidget
-from .widgets.statusbar import StatusBar
 from .widgets.display import VideoDisplayWidget
 
 class MainWindow(QMainWindow):
@@ -23,7 +20,6 @@ class MainWindow(QMainWindow):
         super().__init__()
         # Window-Settings
         self.setWindowTitle(AppConfig.APP_NAME)
-        self.setGeometry(100, 100, 800, 600)
         central_widget = QWidget(self)
         self.setCentralWidget(central_widget)
 
